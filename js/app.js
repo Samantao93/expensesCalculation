@@ -20,19 +20,19 @@ class Calc {
     }
 
     // Methods
-    addExpensesList (object){
+    addExpensesList (object){ // Add expenses in the array
         this.arrayExpenses=[...this.arrayExpenses,object];      
         this.setRest();
     }
 
-    setRest (){
+    setRest (){ // Calculation of the rest based on the objects in the final Array
         const finalTotal = this.arrayExpenses.reduce( (total, expense) => {
             return total + expense.quantity;
         },0)
         this.rest = this.expenses - finalTotal;        
     }
 
-    removeExpense (idNew) {        
+    removeExpense (idNew) { // Filter expenses from the array, show the new Array, calc the rest based on the new Array, print new Rest and check the color of the rest
         ui.printAlert('Gasto eliminado correctamente','correcto')
         this.arrayExpenses = this.arrayExpenses.filter(expense => expense.id !== idNew);
 
@@ -48,13 +48,13 @@ class Calc {
 }
 
 class UI {
-    insertarDatos (quantity) {
+    insertData (quantity) { // Change expenses and rest with the correcta value
         const {expenses, rest} = quantity;
         document.querySelector('#total').textContent = expenses;
         document.querySelector('#restante').textContent = rest;
     }
     
-    printAlert (message,type){
+    printAlert (message,type){ // Alerts depending on adding or removing expenses
         const br = document.createElement('br');
         const elementMessage=document.createElement('DIV');
         elementMessage.classList.add('text-center', 'alert');
@@ -75,7 +75,7 @@ class UI {
         }, 3000);
     }
     
-    printList (array) {
+    printList (array) { // Print Array in HTML 
         clearHTML();
         array.forEach((item) => {
             const element = document.createElement('LI');
@@ -98,11 +98,11 @@ class UI {
         })
     }
 
-    printNewRest (rest) {
+    printNewRest (rest) { // Change the rest content
         document.querySelector('#restante').textContent = rest;
     }
 
-    checkExpenses(expensesObj){
+    checkExpenses(expensesObj){ // Condition of the color depending on the rest
         const {expenses, rest} = expensesObj;
         
         const classRest = document.querySelector('.restante');
@@ -143,10 +143,10 @@ function validateAnswer(){ // Validate the prompt answer
         return;
     } 
     finalExpenses = new Calc(answer);
-    ui.insertarDatos(finalExpenses);
+    ui.insertData(finalExpenses);
 }
 
-function addList (e) {
+function addList (e) { // Add the expense object to the array, display the updated list, calculate the remaining balance, update the displayed balance, and adjust the color of the remaining balance based on the available budget
     e.preventDefault();
     
     const id = Math.random();
@@ -171,12 +171,8 @@ function addList (e) {
     ui.checkExpenses(finalExpenses);
 }
 
-function clearHTML(){
+function clearHTML(){ // Clear the list of the expenses
     while(addExpenses.firstChild){
         addExpenses.removeChild(addExpenses.firstChild);
     }
 }
-
-
-
-/* > < */
