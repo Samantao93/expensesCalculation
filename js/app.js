@@ -1,6 +1,8 @@
 // Variables
-const addExpenses = document.querySelector('.list-group')
-const btnAdd=document.querySelector('button[type="submit"]')
+const form = document.querySelector('#agregar-gasto');
+const addExpenses = document.querySelector('.list-group');
+const btnAdd=document.querySelector('button[type="submit"]');
+
 
 // Events
 eventListeners();
@@ -30,11 +32,13 @@ class Calc {
         this.rest = this.expenses - finalTotal;        
     }
 
-    removeExpense (id) {
-        this.arrayExpenses = this.arrayExpenses.filter((expense) => {
-            expense.id !== id
-        });
+    removeExpense (idNew) {        
+        ui.printAlert('Gasto eliminado correctamente','correcto')
+        this.arrayExpenses = this.arrayExpenses.filter(expense => expense.id !== idNew);
+
         ui.printList(this.arrayExpenses);
+
+        this.setRest();
 
         ui.printNewRest(this.rest);
 
@@ -52,7 +56,7 @@ class UI {
     
     printAlert (message,type){
         const br = document.createElement('br');
-        const elementMessage=document.createElement('DIV')
+        const elementMessage=document.createElement('DIV');
         elementMessage.classList.add('text-center', 'alert');
 
         if (type==='error') {
@@ -62,7 +66,7 @@ class UI {
         }
 
         elementMessage.textContent=message;
-        document.querySelector('.primario').appendChild(br)
+        document.querySelector('.primario').appendChild(br);
         document.querySelector('.primario').appendChild(elementMessage);
         
         setTimeout(() => {
@@ -89,7 +93,6 @@ class UI {
                 finalExpenses.removeExpense(id);
             };
 
-
             element.appendChild(button);
             addExpenses.appendChild(element);     
         })
@@ -101,28 +104,28 @@ class UI {
 
     checkExpenses(expensesObj){
         const {expenses, rest} = expensesObj;
+        
         const classRest = document.querySelector('.restante');
 
-        if(rest < (0.75*expenses)){
-            classRest.classList.remove('alert-success', 'alert-warning')
-            classRest.classList.add('alert-danger')
-            
-        } else if (rest < (0.5*expenses)) {
-            classRest.classList.remove('alert-success', 'alert-danger')
-            classRest.classList.add('alert-warning')
+        if(rest < (0.5*expenses)){
+            classRest.classList.remove('alert-success', 'alert-warning');
+            classRest.classList.add('alert-danger');
+        } else if (rest < (0.75*expenses)) {
+            classRest.classList.remove('alert-success', 'alert-danger');
+            classRest.classList.add('alert-warning');
         } else {
-            classRest.classList.remove('alert-warning','alert-danger')
-            classRest.classList.add('alert-success')
+            classRest.classList.remove('alert-warning','alert-danger');
+            classRest.classList.add('alert-success');
         }
 
         if (rest <= 0){
-            ui.printAlert('There is no money left','error')
+            ui.printAlert('There is no money left','error');
             btnAdd.disabled=true;
+            return;
         }
-
+        btnAdd.disabled=false;
 
     }
-
 
 
 }
@@ -136,11 +139,11 @@ function validateAnswer(){ // Validate the prompt answer
     let answer = Number(prompt ('How much is the budget?'));
 
     if (answer <= 0 || isNaN(answer)) {
-        window.location.reload()
+        window.location.reload();
         return;
     } 
-    finalExpenses = new Calc(answer)
-    ui.insertarDatos(finalExpenses)
+    finalExpenses = new Calc(answer);
+    ui.insertarDatos(finalExpenses);
 }
 
 function addList (e) {
@@ -159,17 +162,18 @@ function addList (e) {
     }
 
     const object = { id, expense, quantity }   
-    finalExpenses.addExpensesList(object);    
+    finalExpenses.addExpensesList(object); 
+    form.reset();   
 
     ui.printList(finalExpenses.arrayExpenses);
-    ui.printNewRest(finalExpenses.rest)
+    ui.printNewRest(finalExpenses.rest);
 
-    ui.checkExpenses(finalExpenses)
+    ui.checkExpenses(finalExpenses);
 }
 
 function clearHTML(){
     while(addExpenses.firstChild){
-        addExpenses.removeChild(addExpenses.firstChild)
+        addExpenses.removeChild(addExpenses.firstChild);
     }
 }
 
